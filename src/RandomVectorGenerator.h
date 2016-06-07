@@ -5,7 +5,7 @@
 class RandomVectorGenerator {
     std::mt19937 randomGenerator;
     std::normal_distribution<double> normalDistribution;
-    std::uniform_distribution<double> uniformDistribution;
+    std::uniform_real_distribution<double> uniformDistribution;
 public:
     RandomVectorGenerator(double seed);
     RandomVectorGenerator();

@@ -110,9 +110,20 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
 
 
     //Initialisation
-    std::vector<double> l = {min_space, min_space};
-    std::vector<double> u = {max_space, max_space};
-    std::vector<double> s1 = {1,0};
+    std::vector<double> l;
+    std::vector<double> u;
+    std::vector<double> s1;
+
+    for (int i = 0; i < problem_size; i++) {
+        l.push_back(min_space);
+        u.push_back(max_space);
+        if (i == 0) {
+            s1.push_back(1);
+        } else {
+            s1.push_back(0);
+        }
+
+    }
     // std::vector<double> l = {0.5, 3.5, 4.5};
     // std::vector<double> u = {10.5, 6.5, 7.5};
     // std::vector<double> s1 = {1,0,0};
@@ -167,7 +178,7 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
 
             quant.push_back(li); //li
             // cout << li << ",";
-            for (int j = 2; j <= problem_size - 1; j++) {
+            for (int j = problem_size - 1; j <= problem_size - 1; j++) {
                 double mi = li + (j - 1) * ((ui - li) / (q - 1));
                 // cout << mi  << ",";
                 quant.push_back(mi);
@@ -310,7 +321,7 @@ std::vector<Individual> chaoticOppositionBasedInitialisation(int population_size
 
         for (int j = 0; j < problem_size; j++) {
 
-            double chi = rvc.getNormalRandom();
+            double chi = rvc.getUniformRandom();
 
             for (int k = 1; k <= max_k; k++) {
                 double s = sin(M_PI * chi);
@@ -368,7 +379,7 @@ std::vector<Individual> chaoticBasedInitialisation(int population_size, int prob
 
         for (int j = 0; j < problem_size; j++) {
 
-            double chi = rvc.getNormalRandom();
+            double chi = rvc.getUniformRandom();
 
             for (int k = 1; k <= max_k; k++) {
                 double s = sin(M_PI * chi);

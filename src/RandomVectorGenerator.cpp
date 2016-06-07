@@ -16,7 +16,7 @@ RandomVectorGenerator::RandomVectorGenerator() {
 std::vector<double> RandomVectorGenerator::getRandomVector(double min, double max, int dimensions) {
     std::vector<double> randomVector;
     for (int i = 0; i < dimensions; i++) {
-        randomVector.push_back(min + (max - min) * getNormalRandom());
+        randomVector.push_back(getNormalRandomWithinRange(min, max));
     }
     return randomVector;
 }
@@ -24,7 +24,7 @@ std::vector<double> RandomVectorGenerator::getRandomVector(double min, double ma
 std::vector<double> RandomVectorGenerator::getUniformRandomVector(double min, double max, int dimensions) {
     std::vector<double> randomVector;
     for (int i = 0; i < dimensions; i++) {
-        randomVector.push_back(min + (max - min) * getUniformRandom());
+        randomVector.push_back(getUniformRandomWithinRange(min, max));
     }
     return randomVector;
 }
@@ -38,7 +38,7 @@ double RandomVectorGenerator::getUniformRandom() {
 }
 
 double RandomVectorGenerator::getUniformRandomWithinRange(double min, double max) {
-    return min + (max - min) * getNormalRandom();
+    return min + (max - min) * getUniformRandom();
 }
 
 
