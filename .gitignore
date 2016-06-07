@@ -1,0 +1,6 @@
+.DS_Store
+viz_output/output/*
+viz_output/data/*
+Release/
+Test/
+Debug/
