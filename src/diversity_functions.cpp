@@ -19,13 +19,38 @@ double calculateVectorMagnitude(std::vector<double> v) {
     return sqrt(length);
 }
 
-double entropyDiversity(std::vector<Individual> population, int problem_size, float min_space, float max_space) {
-    // double sum = 0.0;
-    // for (int i = 0; i < problem_size - population.size(); i++) {
+double getNearestNeighborDistance(std::vector<Individual> &population, Individual &q) {
+    double min = 0.0;
+    for (size_t i = 0; i < population.size(); i++) {
+        double sum = 0.0;
+        Individual &p = population.at(i);
 
-    //     sum += log((problem_size/population.size()) * (population.at(i+population.size())))
-    // }
-    // return sum;
+        if (&p != &q) {
+            for (size_t x = 0; x < p.atts.size(); x++) {
+                sum += pow(p.atts.at(x) - q.atts.at(x),2);
+            }
+            double distance = sqrt(sum);
+            if (distance > 0) {
+                if (i > 0 && distance < min) {
+                    min = distance;
+                } else if (min == 0.0) {
+                    min = distance;
+                }
+            }
+        }
+    }
+    return min;
+}
+
+double entropyDiversity(std::vector<Individual> population, int problem_size, float min_space, float max_space) {
+    double sum = 0.0;
+    for (size_t i = 0; i < population.size(); i++) {
+        double pni = getNearestNeighborDistance(population, population.at(i));
+        // cout << pni << "\n";
+        sum += log(population.size() * pni) + log(2) + 0.5772156649;
+    }
+    // cout << sum << "\n";
+    return 1/population.size() * sum;
 }
 
 
