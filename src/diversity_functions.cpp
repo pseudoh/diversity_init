@@ -49,8 +49,8 @@ double entropyDiversity(std::vector<Individual> population, int problem_size, fl
         // cout << pni << "\n";
         sum += log(population.size() * pni) + log(2) + 0.5772156649;
     }
-    // cout << sum << "\n";
-    return 1/population.size() * sum;
+
+    return sum / population.size();
 }
 
 

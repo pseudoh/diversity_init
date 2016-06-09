@@ -136,7 +136,7 @@ void findMinMax(std::function<std::vector<Individual>(int, int, double, double,
         RandomVectorGenerator rvca(i);
         std::vector<Individual> population = init_function(POPULATION_SIZE, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE, sphereFunction,rvca);
         double diversity = diversity_func(population, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE);
-        // std::cout << diversity << "\n";
+
         if (i == 0) {
             low = diversity;
             high = diversity;
