@@ -114,7 +114,7 @@ TEST(DiversityMeasuresTest, EntropyMeasure){
         population.push_back(new_ind);
     }
 
-    EXPECT_FLOAT_EQ(entropyDiversity(population, 3, -10, 10), 3.786247079);
+    EXPECT_FLOAT_EQ(entropyDiversity(population, 3, -10, 10), 4.159146681);
 }
 
 TEST(DiversityMeasuresTest, AverageDistanceAroundCentre){
