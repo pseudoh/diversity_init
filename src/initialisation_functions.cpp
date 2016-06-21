@@ -100,7 +100,7 @@ std::vector<std::vector<std::vector<double>>> generateSubspaces(
         std::vector<std::vector<double>> space;
         for (size_t x = 0; x < problem_size; x++) {
             double li = minSpace.at(x) + ((i - 1) * (usls/s) * s1.at(x));
-            double ui = maxSpace.at(x) - ((s - 1) * (usls/s) * s1.at(x));
+            double ui = maxSpace.at(x) - ((s - i) * (usls/s) * s1.at(x));
 
             liv.push_back(li);
             luv.push_back(ui);
@@ -124,11 +124,11 @@ std::vector<std::vector<std::vector<double>>> quantize(
     std::vector<std::vector<std::vector<double>>> quants(spaces.size());
     for (size_t si = 0; si < spaces.size(); si++) {
 
-        std::vector<std::vector<double>> space = spaces.at(0);
+        std::vector<std::vector<double>> space = spaces.at(si);
         std::vector<double> ls = space.at(0);
         std::vector<double> us = space.at(1);
 
-        cout << "Space " << si + 1 << "\n";
+        cout << "Quants " << si + 1 << "\n";
 
         for (int i = 0; i < problem_size; i++) {
 
@@ -157,7 +157,6 @@ std::vector<std::vector<std::vector<double>>> quantize(
 std::vector<Individual> orthogonalArray(int population_size, int problem_size, double min_space, double max_space,
     std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
 
-    problem_size = 3;
 
     //Params
     int q = 3;
@@ -207,7 +206,6 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
         columns.pop_back();
     }
 
-
     cout << "Columns" << "\n";
     for (int i = 0; i < columns.size(); i++) {
         for (int x = 0; x < columns.at(i).size(); x++) {
@@ -224,9 +222,11 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
     //***
 
     //Step 1: Divide to Subspaces
-    std::vector<double> minSpaceVector = {0.5, 3.5, 4.5};
-    std::vector<double> maxSpaceVector = {10.5, 6.5, 7.5};
+    // std::vector<double> minSpaceVector = {0.5, 3.5, 4.5};
+    // std::vector<double> maxSpaceVector = {10.5, 6.5, 7.5};
 
+    std::vector<double> minSpaceVector(problem_size, min_space);
+    std::vector<double> maxSpaceVector(problem_size, max_space);
 
     std::vector<std::vector<std::vector<double>>> spaces = generateSubspaces(s, problem_size, minSpaceVector, maxSpaceVector);
 
@@ -247,19 +247,22 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
 
     //Step 3: Select Chromosomes - Apply L3w(33)
 
-    std::vector<Individual> population;
-
+    std::vector<Individual> population(s * pow(q, j1));
 
     for (int si = 0; si < s; si++) {
         for (size_t i = 0; i < columns.size(); i++) {
-            Individual individual;
+            // Individual individual;
             for (size_t j = 0; j < columns.at(i).size(); j++) {
                 double lv = columns.at(i).at(j);
                 std::vector<double> a = quants.at(si).at(i);
-                individual.atts.push_back(a.at(lv - 1));
+                population.at((columns.at(i).size() * si) + j).atts.push_back(a.at(lv - 1));
             }
-            population.push_back(individual);
         }
+    }
+
+    // std::random_shuffle ( population.begin(), population.end());
+    if (s * pow(q, j1) > population_size) {
+        population.resize(population_size);
     }
 
     cout << "\nPopulation: " << population.size() << "\n";

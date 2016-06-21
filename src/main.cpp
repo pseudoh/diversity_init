@@ -56,7 +56,7 @@ double initialiseAndAverageDiversity(std::function<std::vector<Individual>(int, 
         measure += m;
     }
 
-    return (measure / 30);
+    return measure;
 }
 
 void printAndCalculatePopulationDiversity(std::vector<Individual> population,
@@ -170,46 +170,46 @@ void findMinMax(std::function<std::vector<Individual>(int, int, double, double,
 
 
 void viz() {
-    std::cout << "QRS Initialisation" << std::endl;
-    findMinMax(sobolQRSInitialisation, varianceDiversity, "QRSVariance");
-    findMinMax(sobolQRSInitialisation, maxDiversity, "QRSMax");
-    findMinMax(sobolQRSInitialisation, meanDiversity, "QRSMean");
-    findMinMax(sobolQRSInitialisation, swarmRadiusDiversity, "QRSRadius");
-    findMinMax(sobolQRSInitialisation, averageDistanceAroundCentreDiversity, "QRSAverageDistance");
-    findMinMax(sobolQRSInitialisation, dgeaDiversity, "QRSDGEA");
-    findMinMax(sobolQRSInitialisation, entropyDiversity, "QRSEntropy");
-    std::cout << "Random Initialisation" << std::endl;
-    findMinMax(randomInitialisation, varianceDiversity, "RandomVariance");
-    findMinMax(randomInitialisation, maxDiversity, "RandomMax");
-    findMinMax(randomInitialisation, meanDiversity, "RandomMean");
-    findMinMax(randomInitialisation, swarmRadiusDiversity, "RandomRadius");
-    findMinMax(randomInitialisation, averageDistanceAroundCentreDiversity, "RandomAverageDistance");
-    findMinMax(randomInitialisation, dgeaDiversity, "RandomDGEA");
-    findMinMax(randomInitialisation, entropyDiversity, "RandomEntropy");
-    std::cout << "Chaotic Initialisation" << std::endl;
-    findMinMax(chaoticBasedInitialisation, varianceDiversity, "ChaoticVariance");
-    findMinMax(chaoticBasedInitialisation, maxDiversity, "ChaoticMax");
-    findMinMax(chaoticBasedInitialisation, meanDiversity, "ChaoticMean");
-    findMinMax(chaoticBasedInitialisation, swarmRadiusDiversity, "ChaoticRadius");
-    findMinMax(chaoticBasedInitialisation, averageDistanceAroundCentreDiversity, "ChaoticAverageDistance");
-    findMinMax(chaoticBasedInitialisation, dgeaDiversity, "ChaoticDGEA");
-    findMinMax(chaoticBasedInitialisation, entropyDiversity, "ChaoticEntrop");
-    std::cout << "Opposition Initialisation" << std::endl;
-    findMinMax(oppositionBasedInitialisation, varianceDiversity, "OppositionVariance");
-    findMinMax(oppositionBasedInitialisation, maxDiversity, "OppositionMax");
-    findMinMax(oppositionBasedInitialisation, meanDiversity, "OppositionMean");
-    findMinMax(oppositionBasedInitialisation, swarmRadiusDiversity, "OppositionRadius");
-    findMinMax(oppositionBasedInitialisation, averageDistanceAroundCentreDiversity, "OppositionAverageDistance");
-    findMinMax(oppositionBasedInitialisation, dgeaDiversity, "OppositionDGEA");
-    findMinMax(oppositionBasedInitialisation, entropyDiversity, "OppositionEntropy");
-    std::cout << "Chaotic-Opposition Initialisation" << std::endl;
-    findMinMax(chaoticOppositionBasedInitialisation, varianceDiversity, "ChaoticOppositionVariance");
-    findMinMax(chaoticOppositionBasedInitialisation, maxDiversity, "ChaoticOppositionMax");
-    findMinMax(chaoticOppositionBasedInitialisation, meanDiversity, "ChaoticOppositionMean");
-    findMinMax(chaoticOppositionBasedInitialisation, swarmRadiusDiversity, "ChaoticOppositionRadius");
-    findMinMax(chaoticOppositionBasedInitialisation, averageDistanceAroundCentreDiversity, "ChaoticOppositionAverageDistance");
-    findMinMax(chaoticOppositionBasedInitialisation, dgeaDiversity, "ChaoticOppositionDGEA");
-    findMinMax(chaoticOppositionBasedInitialisation, entropyDiversity, "ChaoticOppositionEntropy");
+    // std::cout << "QRS Initialisation" << std::endl;
+    // findMinMax(sobolQRSInitialisation, varianceDiversity, "QRSVariance");
+    // findMinMax(sobolQRSInitialisation, maxDiversity, "QRSMax");
+    // findMinMax(sobolQRSInitialisation, meanDiversity, "QRSMean");
+    // findMinMax(sobolQRSInitialisation, swarmRadiusDiversity, "QRSRadius");
+    // findMinMax(sobolQRSInitialisation, averageDistanceAroundCentreDiversity, "QRSAverageDistance");
+    // findMinMax(sobolQRSInitialisation, dgeaDiversity, "QRSDGEA");
+    // findMinMax(sobolQRSInitialisation, entropyDiversity, "QRSEntropy");
+    // std::cout << "Random Initialisation" << std::endl;
+    // findMinMax(randomInitialisation, varianceDiversity, "RandomVariance");
+    // findMinMax(randomInitialisation, maxDiversity, "RandomMax");
+    // findMinMax(randomInitialisation, meanDiversity, "RandomMean");
+    // findMinMax(randomInitialisation, swarmRadiusDiversity, "RandomRadius");
+    // findMinMax(randomInitialisation, averageDistanceAroundCentreDiversity, "RandomAverageDistance");
+    // findMinMax(randomInitialisation, dgeaDiversity, "RandomDGEA");
+    // findMinMax(randomInitialisation, entropyDiversity, "RandomEntropy");
+    // std::cout << "Chaotic Initialisation" << std::endl;
+    // findMinMax(chaoticBasedInitialisation, varianceDiversity, "ChaoticVariance");
+    // findMinMax(chaoticBasedInitialisation, maxDiversity, "ChaoticMax");
+    // findMinMax(chaoticBasedInitialisation, meanDiversity, "ChaoticMean");
+    // findMinMax(chaoticBasedInitialisation, swarmRadiusDiversity, "ChaoticRadius");
+    // findMinMax(chaoticBasedInitialisation, averageDistanceAroundCentreDiversity, "ChaoticAverageDistance");
+    // findMinMax(chaoticBasedInitialisation, dgeaDiversity, "ChaoticDGEA");
+    // findMinMax(chaoticBasedInitialisation, entropyDiversity, "ChaoticEntrop");
+    // std::cout << "Opposition Initialisation" << std::endl;
+    // findMinMax(oppositionBasedInitialisation, varianceDiversity, "OppositionVariance");
+    // findMinMax(oppositionBasedInitialisation, maxDiversity, "OppositionMax");
+    // findMinMax(oppositionBasedInitialisation, meanDiversity, "OppositionMean");
+    // findMinMax(oppositionBasedInitialisation, swarmRadiusDiversity, "OppositionRadius");
+    // findMinMax(oppositionBasedInitialisation, averageDistanceAroundCentreDiversity, "OppositionAverageDistance");
+    // findMinMax(oppositionBasedInitialisation, dgeaDiversity, "OppositionDGEA");
+    // findMinMax(oppositionBasedInitialisation, entropyDiversity, "OppositionEntropy");
+    // std::cout << "Chaotic-Opposition Initialisation" << std::endl;
+    // findMinMax(chaoticOppositionBasedInitialisation, varianceDiversity, "ChaoticOppositionVariance");
+    // findMinMax(chaoticOppositionBasedInitialisation, maxDiversity, "ChaoticOppositionMax");
+    // findMinMax(chaoticOppositionBasedInitialisation, meanDiversity, "ChaoticOppositionMean");
+    // findMinMax(chaoticOppositionBasedInitialisation, swarmRadiusDiversity, "ChaoticOppositionRadius");
+    // findMinMax(chaoticOppositionBasedInitialisation, averageDistanceAroundCentreDiversity, "ChaoticOppositionAverageDistance");
+    // findMinMax(chaoticOppositionBasedInitialisation, dgeaDiversity, "ChaoticOppositionDGEA");
+    // findMinMax(chaoticOppositionBasedInitialisation, entropyDiversity, "ChaoticOppositionEntropy");
     std::cout << "Orthogonal Design Initialisation" << std::endl;
     findMinMax(orthogonalArray, varianceDiversity, "ODVariance");
     findMinMax(orthogonalArray, maxDiversity, "ODMax");
