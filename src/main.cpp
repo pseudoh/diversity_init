@@ -45,9 +45,9 @@ double initialiseAndAverageDiversity(std::function<std::vector<Individual>(int, 
     std::function<double(Individual)>, RandomVectorGenerator)> init_function,
  std::function<double(std::vector<Individual>, int, float, float)> diversity_func) {
 
-    double measure;
+    double measure = 0.0;
 
-    for (int rI = 0; rI < 30; rI++) {
+    for (int rI = 0; rI < 1; rI++) {
          RandomVectorGenerator rvca(rI);
         std::vector<Individual> population = init_function(POPULATION_SIZE, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE, sphereFunction,rvca);
 
@@ -122,6 +122,7 @@ void writeVizFile(std::vector<Individual> population, std::string label) {
     }
     csvFile.close();
 }
+
 
 void findMinMax(std::function<std::vector<Individual>(int, int, double, double,
     std::function<double(Individual)>, RandomVectorGenerator)> init_function,
@@ -232,50 +233,50 @@ int main(int argc, char ** argv)
 
 
 
-    printMethodLine("QRS",
-        initialiseAndAverageDiversity(sobolQRSInitialisation, varianceDiversity),
-        initialiseAndAverageDiversity(sobolQRSInitialisation, maxDiversity),
-        initialiseAndAverageDiversity(sobolQRSInitialisation, meanDiversity),
-        initialiseAndAverageDiversity(sobolQRSInitialisation, swarmRadiusDiversity),
-        initialiseAndAverageDiversity(sobolQRSInitialisation, averageDistanceAroundCentreDiversity),
-        initialiseAndAverageDiversity(sobolQRSInitialisation, dgeaDiversity),
-        initialiseAndAverageDiversity(sobolQRSInitialisation, entropyDiversity));
+    // printMethodLine("QRS",
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, varianceDiversity),
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, maxDiversity),
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, meanDiversity),
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, swarmRadiusDiversity),
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, averageDistanceAroundCentreDiversity),
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, dgeaDiversity),
+    //     initialiseAndAverageDiversity(sobolQRSInitialisation, entropyDiversity));
 
-    printMethodLine("Uniform-Random",
-        initialiseAndAverageDiversity(randomInitialisation, varianceDiversity),
-        initialiseAndAverageDiversity(randomInitialisation, maxDiversity),
-        initialiseAndAverageDiversity(randomInitialisation, meanDiversity),
-        initialiseAndAverageDiversity(randomInitialisation, swarmRadiusDiversity),
-        initialiseAndAverageDiversity(randomInitialisation, averageDistanceAroundCentreDiversity),
-        initialiseAndAverageDiversity(randomInitialisation, dgeaDiversity),
-        initialiseAndAverageDiversity(randomInitialisation, entropyDiversity));
+    // printMethodLine("Uniform-Random",
+    //     initialiseAndAverageDiversity(randomInitialisation, varianceDiversity),
+    //     initialiseAndAverageDiversity(randomInitialisation, maxDiversity),
+    //     initialiseAndAverageDiversity(randomInitialisation, meanDiversity),
+    //     initialiseAndAverageDiversity(randomInitialisation, swarmRadiusDiversity),
+    //     initialiseAndAverageDiversity(randomInitialisation, averageDistanceAroundCentreDiversity),
+    //     initialiseAndAverageDiversity(randomInitialisation, dgeaDiversity),
+    //     initialiseAndAverageDiversity(randomInitialisation, entropyDiversity));
 
-    printMethodLine("Chaotic",
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, varianceDiversity),
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, maxDiversity),
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, meanDiversity),
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, swarmRadiusDiversity),
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, averageDistanceAroundCentreDiversity),
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, dgeaDiversity),
-        initialiseAndAverageDiversity(chaoticBasedInitialisation, entropyDiversity));
+    // printMethodLine("Chaotic",
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, varianceDiversity),
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, maxDiversity),
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, meanDiversity),
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, swarmRadiusDiversity),
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, averageDistanceAroundCentreDiversity),
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, dgeaDiversity),
+    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, entropyDiversity));
 
-    printMethodLine("Opposition",
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, varianceDiversity),
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, maxDiversity),
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, meanDiversity),
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, swarmRadiusDiversity),
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, dgeaDiversity),
-        initialiseAndAverageDiversity(oppositionBasedInitialisation, entropyDiversity));
+    // printMethodLine("Opposition",
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, varianceDiversity),
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, maxDiversity),
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, meanDiversity),
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, swarmRadiusDiversity),
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, dgeaDiversity),
+    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, entropyDiversity));
 
-    printMethodLine("Chaotic-Opposition",
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, varianceDiversity),
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, maxDiversity),
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, meanDiversity),
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, swarmRadiusDiversity),
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, dgeaDiversity),
-        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, entropyDiversity));
+    // printMethodLine("Chaotic-Opposition",
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, varianceDiversity),
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, maxDiversity),
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, meanDiversity),
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, swarmRadiusDiversity),
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, dgeaDiversity),
+    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, entropyDiversity));
 
     // printMethodLine("Uniform Design",
     //     initialiseAndAverageDiversity(uniformDesignInitialisation, varianceDiversity, rvc),

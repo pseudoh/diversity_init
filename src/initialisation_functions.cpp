@@ -27,128 +27,81 @@ bool isPrime(int num) {
     }
 }
 
-std::vector<Individual> orthogonalArray(int population_size, int problem_size, double min_space, double max_space,
-    std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
-
-
-    //Params
-    int q = 3;
-    int s = 12; //M = S * pow(q, j1)
-
-    //Generate J1
-    int j1 = 1;
-    while ((pow(q, j1) - 1) / (q - 1) < problem_size) {
-        j1++;
-    }
-
-    int n1 = problem_size;
-
-    if ((pow(q, j1) - 1) / (q - 1) > problem_size) {
-        n1 = (pow(q, j1) - 1) / (q - 1);
-    }
-
-    //Construct basic columns
-    std::vector<std::vector<double>> aij(pow(q, j1));
+std::vector<std::vector<double>> createBasicColumns(int j1, int q) {
+    // cout << "Basic Columns" << "\n";
+    std::vector<std::vector<double>> aij;
     for (int k = 1; k <= j1; k++) {
         double j = ((pow(q, k - 1) - 1) / (q - 1)) + 1;
+        std::vector<double> jRow;
         for (int i = 1; i <= pow(q, j1); i++) {
             int x = fmod((((i - 1) / (pow(q, j1 - k)))), q);
-            aij.at(i - 1).push_back(x);
-
+            jRow.push_back(x);
+            // cout << x << ",";
         }
-
+        aij.push_back(jRow);
+        // cout << "\n";
     }
+    return aij;
+}
 
-    std::vector<std::vector<double>> aji(n1);
-
-    for (size_t i = 0; i < aij.at(0).size();i++) {
-        for (size_t x = 0; x < aij.size(); x++) {
-            // cout << x << "\n";
-            aji.at(i).push_back(aij.at(x).at(i));
-        }
-    }
-
-
-    // Construct non basic columns
+std::vector<std::vector<double>> createNonBasicColumns(int j1, int q,std::vector<std::vector<double>> basicColumns) {
+    // cout << "Non Basic Columns" << "\n";
+    std::vector<std::vector<double>> aij;
     for (int k = 2; k <= j1; k++) {
         double j = ((pow(q, k - 1) - 1) / (q - 1)) + 1;
+
         for (int s = 1; s <= j - 1; s++) {
             for (int t = 1; t <= q - 1; t++) {
                 // as * t
-                std::vector<double> as = aji.at(s - 1);
-                std::vector<double> aj = aji.at(j - 1);
+                std::vector<double> as = basicColumns.at(s - 1);
+                std::vector<double> aj = basicColumns.at(j - 1);
                 std::vector<double> x;
 
                 for (size_t i = 0; i < as.size(); i++) {
                     // x.push_back(fmod((as.at(i) * t) + aj.at(i), q));
-                    aji.at((j + (s - 1) * (q - 1)+t) - 1).push_back(fmod((as.at(i) * t) + aj.at(i), q));
-
+                    double nonbasicA = fmod((as.at(i) * t) + aj.at(i), q);
+                    // aji.at((j + (s - 1) * (q - 1)+t) - 1).push_back(nonbasicA);
+                    x.push_back(nonbasicA);
+                    // cout << nonbasicA << ",";
                 }
+                // cout << "\n";
+                aij.push_back(x);
             }
-        }
-    }
 
-    // Increment aij
-    for (int i = 0; i < n1; i++) {
-        for (int x = 0; x < pow(q, j1); x++) {
-            aji.at(i).at(x) += 1;
-        }
-    }
-
-    //Delete the last N1 - N
-    for (int i = 0; i < n1 - problem_size; i++) {
-        aji.pop_back();
-    }
-
-    // Print out
-    // for (int i = 0; i < aji.size(); i++) {
-    //     for (int x = 0; x < pow(q, j1); x++) {
-    //         cout <<  aji.at(i).at(x) << ",";
-    //     }
-    //     cout << "\n";
-    // }
-
-
-    //Initialisation
-    std::vector<double> l;
-    std::vector<double> u;
-    std::vector<double> s1;
-
-    for (int i = 0; i < problem_size; i++) {
-        l.push_back(min_space);
-        u.push_back(max_space);
-        if (i == 0) {
-            s1.push_back(1);
-        } else {
-            s1.push_back(0);
         }
 
     }
-    // std::vector<double> l = {0.5, 3.5, 4.5};
-    // std::vector<double> u = {10.5, 6.5, 7.5};
-    // std::vector<double> s1 = {1,0,0};
+    return aij;
+}
+
+
+std::vector<std::vector<std::vector<double>>> generateSubspaces(
+    int s,
+    int problem_size,
+    std::vector<double> minSpace,
+    std::vector<double> maxSpace) {
 
     //Get max us-ls
     double usls = 0;
     for (int i = 0; i < problem_size; i++) {
-        if (u.at(i) - l.at(i) > usls) {
-            usls = u.at(i) - l.at(i) ;
+        if (maxSpace.at(i) - minSpace.at(i) > usls) {
+            usls = maxSpace.at(i) - minSpace.at(i) ;
         }
     }
 
-    // cout << usls << "\n";
 
-    //Divide subspaces
+    std::vector<double> s1(problem_size, 0); //1s
+    s1.at(0) = 1;
+
     std::vector<std::vector<std::vector<double>>> spaces;
     for (int i = 1; i <= s; i++) {
         std::vector<double> liv;
         std::vector<double> luv;
         std::vector<std::vector<double>> space;
-        for (size_t x = 0; x < l.size(); x++) {
-            double li = l.at(x) + ((i - 1) * (usls/s) * s1.at(x));
-            double ui = u.at(x) - ((s - 1) * (usls/s) * s1.at(x));
+        for (size_t x = 0; x < problem_size; x++) {
+            double li = minSpace.at(x) + ((i - 1) * (usls/s) * s1.at(x));
+            double ui = maxSpace.at(x) - ((s - 1) * (usls/s) * s1.at(x));
 
-            // cout << li << "-" << ui << ",";
             liv.push_back(li);
             luv.push_back(ui);
         }
@@ -159,8 +112,15 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
         spaces.push_back(space);
     }
 
-    // cout << "\n" << "Quantization" << "\n";
-    //Quantize
+    return spaces;
+}
+
+
+std::vector<std::vector<std::vector<double>>> quantize(
+    int problem_size,
+    int q,
+    std::vector<std::vector<std::vector<double>>> spaces) {
+
     std::vector<std::vector<std::vector<double>>> quants(spaces.size());
     for (size_t si = 0; si < spaces.size(); si++) {
 
@@ -168,7 +128,7 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
         std::vector<double> ls = space.at(0);
         std::vector<double> us = space.at(1);
 
-        // cout << "Space " << si + 1 << "\n";
+        cout << "Space " << si + 1 << "\n";
 
         for (int i = 0; i < problem_size; i++) {
 
@@ -177,46 +137,142 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
             double ui = us.at(i);
 
             quant.push_back(li); //li
-            // cout << li << ",";
+            cout << li << ",";
             for (int j = problem_size - 1; j <= problem_size - 1; j++) {
                 double mi = li + (j - 1) * ((ui - li) / (q - 1));
-                // cout << mi  << ",";
+                cout << mi  << ",";
                 quant.push_back(mi);
             }
             quant.push_back(ui); //li
-            // cout << ui << "\n";
+            cout << ui << "\n";
             quants.at(si).push_back(quant);
         }
     }
 
+    return quants;
+}
 
-    // //Apply L3
 
-    std::vector<Individual> population(pow(q, j1) * s);
+
+std::vector<Individual> orthogonalArray(int population_size, int problem_size, double min_space, double max_space,
+    std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
+
+    problem_size = 3;
+
+    //Params
+    int q = 3;
+    int s = 5; //M = S * pow(q, j1)
+
+    //***
+    //*** Algorithm 2
+    //***
+
+    //Step 1: Select Smallest j1
+    int j1 = 1;
+    while ((pow(q, j1) - 1) / (q - 1) < problem_size) {
+        j1++;
+    }
+
+    //Step 2: Calculate N1
+    int n1 = problem_size;
+    if ((pow(q, j1) - 1) / (q - 1) > problem_size) {
+        n1 = (pow(q, j1) - 1) / (q - 1);
+    }
+
+    //Step 3: Execute Algorithm 1
+
+    //***
+    //*** Algorithm 1
+    //***
+
+    //Construct Basic Columns
+    std::vector<std::vector<double>> basicColumns = createBasicColumns(j1, q);
+    std::vector<std::vector<double>> nonBasicColumns = createNonBasicColumns(j1, q, basicColumns);
+
+
+    //Concat Columns
+    std::vector<std::vector<double>> columns;
+    std::copy(basicColumns.begin(), basicColumns.end(), std::back_inserter(columns));
+    std::copy(nonBasicColumns.begin(), nonBasicColumns.end(), std::back_inserter(columns));
+
+    //Increment Columns
+    for (int i = 0; i < columns.size(); i++) {
+        for (int x = 0; x < columns.at(i).size(); x++) {
+            columns.at(i).at(x)++;
+        }
+    }
+
+    //Step 4: Delete the last N1-N
+    for (int i = 0; i < n1 - problem_size; i++) {
+        columns.pop_back();
+    }
+
+
+    cout << "Columns" << "\n";
+    for (int i = 0; i < columns.size(); i++) {
+        for (int x = 0; x < columns.at(i).size(); x++) {
+            cout << columns.at(i).at(x) << ",";
+        }
+        cout << "\n";
+    }
+
+    //Columns = L32(33)
+
+
+    //***
+    //*** Algorithm 3
+    //***
+
+    //Step 1: Divide to Subspaces
+    std::vector<double> minSpaceVector = {0.5, 3.5, 4.5};
+    std::vector<double> maxSpaceVector = {10.5, 6.5, 7.5};
+
+
+    std::vector<std::vector<std::vector<double>>> spaces = generateSubspaces(s, problem_size, minSpaceVector, maxSpaceVector);
+
+    cout << "\nSpaces" << "\n";
+    for (int i = 0; i < spaces.size(); i++) {
+        cout << "Space " << i << " \n";
+        for (int x = 0; x < spaces.at(i).size(); x++) {
+            for (int y = 0; y < spaces.at(i).at(x).size(); y++) {
+                cout << spaces.at(i).at(x).at(y) << ",";
+            }
+            cout << "\n";
+        }
+        cout << "\n";
+    }
+
+    //Step 2: Quantize
+    std::vector<std::vector<std::vector<double>>> quants = quantize(problem_size, q, spaces);
+
+    //Step 3: Select Chromosomes - Apply L3w(33)
+
+    std::vector<Individual> population;
 
 
     for (int si = 0; si < s; si++) {
-        for (size_t i = 0; i < aji.size(); i++) {
-            for (size_t x = 0; x < aji.at(i).size(); x++) {
-                double lv = aji.at(i).at(x);
+        for (size_t i = 0; i < columns.size(); i++) {
+            Individual individual;
+            for (size_t j = 0; j < columns.at(i).size(); j++) {
+                double lv = columns.at(i).at(j);
                 std::vector<double> a = quants.at(si).at(i);
-                // cout << lv - 1 << ",";
-                // cout << a.at(lv - 1) << ",";
-
-                population.at((aji.at(i).size() * si) + x).atts.push_back(a.at(lv - 1));
+                individual.atts.push_back(a.at(lv - 1));
             }
-            // cout << "\n";
+            population.push_back(individual);
         }
-        // cout << "\n\n";
     }
 
-    //Choose random = population_size
-    std::random_shuffle ( population.begin(), population.end() );
+    cout << "\nPopulation: " << population.size() << "\n";
+    for (int i = 0; i < population.size(); i++) {
+        for (int x = 0; x < population.at(i).atts.size(); x++) {
+            cout << population.at(i).atts.at(x) << ",";
+        }
+        cout << "\n";
+    }
 
-
-    population.resize(population_size);
 
     return population;
+
 };
 
 std::vector<Individual> sobolQRSInitialisation(int population_size, int problem_size, double min_space, double max_space,
