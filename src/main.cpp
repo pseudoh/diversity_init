@@ -48,7 +48,7 @@ double initialiseAndAverageDiversity(std::function<std::vector<Individual>(int, 
     double measure = 0.0;
 
     for (int rI = 0; rI < 1; rI++) {
-         RandomVectorGenerator rvca(rI);
+        RandomVectorGenerator rvca(rI);
         std::vector<Individual> population = init_function(POPULATION_SIZE, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE, sphereFunction,rvca);
 
         double m = diversity_func(population, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE);
@@ -116,7 +116,9 @@ void writeVizFile(std::vector<Individual> population, std::string label) {
             } else {
                 csvFile << atts.at(x);
             }
+            std::cout << atts.at(x) << ",";
         }
+        std::cout << "\n";
         csvFile.flush();
         csvFile << "\n";
     }
@@ -132,11 +134,27 @@ void findMinMax(std::function<std::vector<Individual>(int, int, double, double,
     double high = 0;
     std::vector<Individual> lowPopulation;
     std::vector<Individual> highPopulation;
-    for (int i = 0; i < 1000; i++) {
-
+    std::cout << "Running " << label << "\n";
+    for (int i = 0; i < 1000000; i++) {
+        std::cout << label << ":" << "Iteration " << i << "\n";
         RandomVectorGenerator rvca(i);
         std::vector<Individual> population = init_function(POPULATION_SIZE, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE, sphereFunction,rvca);
         double diversity = diversity_func(population, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE);
+
+
+
+        //  double diversity = 0.0;
+        //  std::vector<Individual> population;
+
+        // for (int rI = 0; rI < 1; rI++) {
+        //     RandomVectorGenerator rvca(rI*i);
+        //     population = init_function(POPULATION_SIZE, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE, sphereFunction,rvca);
+
+        //     double m = diversity_func(population, PROBLEM_SIZE, MIN_SPACE, MAX_SPACE);
+
+        //     diversity += m;
+        // }
+
 
         if (i == 0) {
             low = diversity;
@@ -154,6 +172,8 @@ void findMinMax(std::function<std::vector<Individual>(int, int, double, double,
             }
         }
     }
+
+
 
 
     //Print CSV
@@ -187,7 +207,7 @@ void viz() {
     // findMinMax(randomInitialisation, dgeaDiversity, "RandomDGEA");
     // findMinMax(randomInitialisation, entropyDiversity, "RandomEntropy");
     // std::cout << "Chaotic Initialisation" << std::endl;
-    // findMinMax(chaoticBasedInitialisation, varianceDiversity, "ChaoticVariance");
+    // // findMinMax(chaoticBasedInitialisation, varianceDiversity, "ChaoticVariance");
     // findMinMax(chaoticBasedInitialisation, maxDiversity, "ChaoticMax");
     // findMinMax(chaoticBasedInitialisation, meanDiversity, "ChaoticMean");
     // findMinMax(chaoticBasedInitialisation, swarmRadiusDiversity, "ChaoticRadius");
@@ -233,50 +253,50 @@ int main(int argc, char ** argv)
 
 
 
-    // printMethodLine("QRS",
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, varianceDiversity),
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, maxDiversity),
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, meanDiversity),
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, swarmRadiusDiversity),
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, averageDistanceAroundCentreDiversity),
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, dgeaDiversity),
-    //     initialiseAndAverageDiversity(sobolQRSInitialisation, entropyDiversity));
+    printMethodLine("QRS",
+        initialiseAndAverageDiversity(sobolQRSInitialisation, varianceDiversity),
+        initialiseAndAverageDiversity(sobolQRSInitialisation, maxDiversity),
+        initialiseAndAverageDiversity(sobolQRSInitialisation, meanDiversity),
+        initialiseAndAverageDiversity(sobolQRSInitialisation, swarmRadiusDiversity),
+        initialiseAndAverageDiversity(sobolQRSInitialisation, averageDistanceAroundCentreDiversity),
+        initialiseAndAverageDiversity(sobolQRSInitialisation, dgeaDiversity),
+        initialiseAndAverageDiversity(sobolQRSInitialisation, entropyDiversity));
 
-    // printMethodLine("Uniform-Random",
-    //     initialiseAndAverageDiversity(randomInitialisation, varianceDiversity),
-    //     initialiseAndAverageDiversity(randomInitialisation, maxDiversity),
-    //     initialiseAndAverageDiversity(randomInitialisation, meanDiversity),
-    //     initialiseAndAverageDiversity(randomInitialisation, swarmRadiusDiversity),
-    //     initialiseAndAverageDiversity(randomInitialisation, averageDistanceAroundCentreDiversity),
-    //     initialiseAndAverageDiversity(randomInitialisation, dgeaDiversity),
-    //     initialiseAndAverageDiversity(randomInitialisation, entropyDiversity));
+    printMethodLine("Uniform-Random",
+        initialiseAndAverageDiversity(randomInitialisation, varianceDiversity),
+        initialiseAndAverageDiversity(randomInitialisation, maxDiversity),
+        initialiseAndAverageDiversity(randomInitialisation, meanDiversity),
+        initialiseAndAverageDiversity(randomInitialisation, swarmRadiusDiversity),
+        initialiseAndAverageDiversity(randomInitialisation, averageDistanceAroundCentreDiversity),
+        initialiseAndAverageDiversity(randomInitialisation, dgeaDiversity),
+        initialiseAndAverageDiversity(randomInitialisation, entropyDiversity));
 
-    // printMethodLine("Chaotic",
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, varianceDiversity),
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, maxDiversity),
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, meanDiversity),
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, swarmRadiusDiversity),
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, averageDistanceAroundCentreDiversity),
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, dgeaDiversity),
-    //     initialiseAndAverageDiversity(chaoticBasedInitialisation, entropyDiversity));
+    printMethodLine("Chaotic",
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, varianceDiversity),
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, maxDiversity),
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, meanDiversity),
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, swarmRadiusDiversity),
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, averageDistanceAroundCentreDiversity),
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, dgeaDiversity),
+        initialiseAndAverageDiversity(chaoticBasedInitialisation, entropyDiversity));
 
-    // printMethodLine("Opposition",
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, varianceDiversity),
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, maxDiversity),
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, meanDiversity),
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, swarmRadiusDiversity),
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, dgeaDiversity),
-    //     initialiseAndAverageDiversity(oppositionBasedInitialisation, entropyDiversity));
+    printMethodLine("Opposition",
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, varianceDiversity),
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, maxDiversity),
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, meanDiversity),
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, swarmRadiusDiversity),
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, dgeaDiversity),
+        initialiseAndAverageDiversity(oppositionBasedInitialisation, entropyDiversity));
 
-    // printMethodLine("Chaotic-Opposition",
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, varianceDiversity),
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, maxDiversity),
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, meanDiversity),
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, swarmRadiusDiversity),
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, dgeaDiversity),
-    //     initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, entropyDiversity));
+    printMethodLine("Chaotic-Opposition",
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, varianceDiversity),
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, maxDiversity),
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, meanDiversity),
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, swarmRadiusDiversity),
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, averageDistanceAroundCentreDiversity),
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, dgeaDiversity),
+        initialiseAndAverageDiversity(chaoticOppositionBasedInitialisation, entropyDiversity));
 
     // printMethodLine("Uniform Design",
     //     initialiseAndAverageDiversity(uniformDesignInitialisation, varianceDiversity, rvc),
@@ -295,6 +315,8 @@ int main(int argc, char ** argv)
         initialiseAndAverageDiversity(orthogonalArray, dgeaDiversity),
         initialiseAndAverageDiversity(orthogonalArray, entropyDiversity));
 
+
+    // initialiseAndAverageDiversity(orthogonalArray, varianceDiversity);
 
     return 0;
 }

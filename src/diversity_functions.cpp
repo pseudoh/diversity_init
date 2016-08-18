@@ -150,6 +150,7 @@ double varianceDiversity(std::vector<Individual> population, int problem_size, f
 
     int individualN = 0;
 
+    /*
     for (auto &individual : population) {
         std::vector<double> strategy;
         for (int d = 0; d < problem_size; d++) {
@@ -157,9 +158,27 @@ double varianceDiversity(std::vector<Individual> population, int problem_size, f
         }
         strategies.push_back(strategy);
     }
+    */
+
+    for (auto &individual : population)
+        strategies.push_back(individual.atts);
 
 
+    double finalV = 0.0;
+    for (int d=0; d<problem_size; ++d){
+        double mean = 0.0;
+        for(const auto& strategy : strategies)
+            mean += strategy.at(d);
+        mean/=strategies.size();
 
+        double var = 0.0;
+        for(const auto& strategy : strategies)
+            var += pow(mean - strategy.at(d),2);
+        var/=strategies.size();
+        finalV += var;
+    }
+
+    /*
     double finalV = 0.0;
     for (int strategyDI = 0; strategyDI < problem_size; strategyDI++) {
         double sum = 0.0;
@@ -178,10 +197,10 @@ double varianceDiversity(std::vector<Individual> population, int problem_size, f
     }
 
     finalV /= population.size();
-
+    */
 
     return finalV;
-        };
+};
 
 
 double dgeaDiversity(std::vector<Individual> population, int problem_size, float min_space, float max_space){

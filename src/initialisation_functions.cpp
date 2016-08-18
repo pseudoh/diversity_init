@@ -152,9 +152,59 @@ std::vector<std::vector<std::vector<double>>> quantize(
     return quants;
 }
 
-
-
 std::vector<Individual> orthogonalArray(int population_size, int problem_size, double min_space, double max_space,
+    std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
+
+
+    std::vector<Individual> population;
+
+    double n =  2 * sqrt(population_size);
+
+    double usls = (((min_space-max_space) * -1));
+    double sections =  usls / 100;
+    double pps = population_size * sections;
+
+
+    double current_section_space = min_space;
+
+    while (current_section_space <= max_space) {
+
+        double c_min_space = current_section_space;
+        double c_max_space = current_section_space + (usls * sections);
+
+        if (c_max_space <= max_space) {
+            // cout << c_min_space << "," << c_max_space << "\n";
+            for (int i = 0; i < pps; i++) {
+                Individual individual;
+                individual.atts = rvc.getUniformRandomVector(c_min_space, c_max_space, problem_size);
+                population.push_back(individual);
+            }
+        }
+
+        current_section_space += usls * sections;
+
+
+
+    }
+
+    // for (int i = 0; i < population.size(); i++) {
+    //     Individual ind = population.at(i);
+
+    //     for (double& d : ind.atts ) {
+    //         cout << d << ",";
+    //     }
+    //     cout << "\n";
+    // }
+
+
+    // cout << population.size() << "\n";
+
+    return population;
+
+}
+
+
+std::vector<Individual> orthogonalArraya(int population_size, int problem_size, double min_space, double max_space,
     std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
 
 
