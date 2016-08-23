@@ -117,8 +117,6 @@ double maxDiversity(std::vector<Individual> population, int problem_size, float 
             if (v > maxd[i]) {
                 maxd[i] = v;
             }
-
-
        }
     }
 
@@ -150,15 +148,7 @@ double varianceDiversity(std::vector<Individual> population, int problem_size, f
 
     int individualN = 0;
 
-    /*
-    for (auto &individual : population) {
-        std::vector<double> strategy;
-        for (int d = 0; d < problem_size; d++) {
-            strategy.push_back(individual.atts.at(d));
-        }
-        strategies.push_back(strategy);
-    }
-    */
+
 
     for (auto &individual : population)
         strategies.push_back(individual.atts);
@@ -178,26 +168,6 @@ double varianceDiversity(std::vector<Individual> population, int problem_size, f
         finalV += var;
     }
 
-    /*
-    double finalV = 0.0;
-    for (int strategyDI = 0; strategyDI < problem_size; strategyDI++) {
-        double sum = 0.0;
-
-        for (auto &strategyDValue : strategies[strategyDI]) {
-            sum += strategyDValue;
-        }
-
-        sum /= population.size();
-
-        for (size_t strategyDValueI = 0; strategyDValueI < strategies[strategyDI].size(); strategyDValueI++) {
-            finalV += pow(strategies[strategyDI].at(strategyDValueI) - sum, 2);
-
-        }
-
-    }
-
-    finalV /= population.size();
-    */
 
     return finalV;
 };

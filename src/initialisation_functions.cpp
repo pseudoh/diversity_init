@@ -158,47 +158,29 @@ std::vector<Individual> orthogonalArray(int population_size, int problem_size, d
 
     std::vector<Individual> population;
 
-    double n =  2 * sqrt(population_size);
 
-    double usls = (((min_space-max_space) * -1));
-    double sections =  usls / 100;
-    double pps = population_size * sections;
+    double levels_per_dimension = ceil(pow(population_size,1.0/problem_size));
 
+    double n = pow(levels_per_dimension, problem_size);
 
-    double current_section_space = min_space;
+    // std::cout << levels_per_dimension << "," << n << "\n";
 
-    while (current_section_space <= max_space) {
+    for (int i = 1; i < population_size - 1; i++) {
 
-        double c_min_space = current_section_space;
-        double c_max_space = current_section_space + (usls * sections);
+        Individual individual;
+        for (int j = 0; j < problem_size; j++) {
 
-        if (c_max_space <= max_space) {
-            // cout << c_min_space << "," << c_max_space << "\n";
-            for (int i = 0; i < pps; i++) {
-                Individual individual;
-                individual.atts = rvc.getUniformRandomVector(c_min_space, c_max_space, problem_size);
-                population.push_back(individual);
-            }
+            int level = 1 + (rvc.getUniformRandom() * (n - 1));
+
+            double f = 1+(fmod(floor(level  / pow(levels_per_dimension, j)),levels_per_dimension));
+             // double randomPoint = min_space + (((f - 2) * (1/(levels_per_dimension-1))) * (max_space - min_space));
+            // cout <<  f * (1/(levels_per_dimension-1)) << ",";
+            individual.atts.push_back(f);
         }
+        // std::cout <<  "\n";
 
-        current_section_space += usls * sections;
-
-
-
+        population.push_back(individual);
     }
-
-    // for (int i = 0; i < population.size(); i++) {
-    //     Individual ind = population.at(i);
-
-    //     for (double& d : ind.atts ) {
-    //         cout << d << ",";
-    //     }
-    //     cout << "\n";
-    // }
-
-
-    // cout << population.size() << "\n";
-
     return population;
 
 }
@@ -377,40 +359,7 @@ std::vector<Individual> randomInitialisation(int population_size, int problem_si
     return population;
 };
 
-std::vector<Individual> uniformDesignInitialisation(int population_size, int problem_size, double min_space, double max_space,
-    std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
 
-
-
-    double randomPrimes[population_size];
-
-    //Find all the prime numbers which
-    //are less than M , where M is the size of population.
-
-    for (int i = 0; i < population_size; i++) {
-        // double prime = std::round(rvc.getNormalRandomWithinRange(1, population_size - 1));
-        // if (!isPrime(prime) || prime < population_size) {
-        //     i--;
-        // } else {
-        //     randomPrimes[i] = prime;
-        // }
-        //Get every prime up to popualation size
-    }
-
-    std::vector<Individual> population;
-
-    for (int i = 0; i < population_size; i++) {
-        Individual individual;
-        for (int j = 1; j <= problem_size; j++) {
-            double x = fmod(i * randomPrimes[j], population_size);
-            individual.atts.push_back(x);
-        }
-        population.push_back(individual);
-    }
-
-    return population;
-
-};
 
 std::vector<Individual> chaoticOppositionBasedInitialisation(int population_size, int problem_size, double min_space, double max_space,
     std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
@@ -470,7 +419,7 @@ std::vector<Individual> chaoticOppositionBasedInitialisation(int population_size
 };
 
 
-std::vector<Individual> chaoticBasedInitialisation(int population_size, int problem_size, double min_space, double max_space,
+std::vector<Individual> oldChaoticBasedInitialisation(int population_size, int problem_size, double min_space, double max_space,
     std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
 
     std::vector<Individual> population;
@@ -506,6 +455,48 @@ std::vector<Individual> chaoticBasedInitialisation(int population_size, int prob
 
     return population;
 };
+
+std::vector<Individual> chaoticBasedInitialisation(int population_size, int problem_size, double min_space, double max_space,
+    std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
+
+    std::vector<Individual> population;
+
+
+    int max_k = 300;
+
+    Individual individual;
+
+    for (int d  = 0; d < problem_size; d++) {
+        double att = min_space + (rvc.getUniformRandom() * (max_space - min_space));
+        individual.atts.push_back(att);
+    }
+
+    population.push_back(individual);
+
+    for (int i = 1; i < population_size - 1; i++) {
+
+
+
+        Individual individual;
+        Individual previousIndividual = population.at(i - 1);
+
+        for (int j = 0; j < problem_size; j++) {
+
+
+            double s = 1.0 * sin(M_PI * previousIndividual.atts.at(j));
+
+            double att = min_space + (s * (max_space - min_space));
+            individual.atts.push_back(att);
+        }
+
+        population.push_back(individual);
+    }
+
+
+
+    return population;
+};
+
 
 std::vector<Individual> oppositionBasedInitialisation(int population_size, int problem_size, double min_space, double max_space,
     std::function<double(Individual)> fitness_func, RandomVectorGenerator rvc){
